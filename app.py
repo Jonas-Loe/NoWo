@@ -4,15 +4,20 @@ app = Flask(__name__)
 app.secret_key = 'supersecretkey123'  # WICHTIG: Für Sessions
 
 # Login-Seite
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         if request.form['username'] == 'admin' and request.form['password'] == 'test123':
             session['logged_in'] = True
-            return redirect(url_for('index'))
+            return redirect(url_for('startseite'))
         else:
             return "Login fehlgeschlagen – bitte zurück und erneut versuchen."
     return render_template('login.html')
+
+# Root-Route leitet auf Login weiter
+@app.route('/')
+def root():
+    return redirect(url_for('login'))
 
 # Logout-Funktion (optional)
 @app.route('/logout')
@@ -22,13 +27,12 @@ def logout():
 
 # Startseite – nur nach Login sichtbar
 @app.route('/startseite')
-def index():
+def startseite():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     return render_template('index.html')
 
-
-# ALLE weiteren Seiten: Login-Prüfung vor Zugriff
+# Login-Prüfung als Dekorator für alle geschützten Seiten
 def login_required(f):
     def wrapper(*args, **kwargs):
         if not session.get('logged_in'):
@@ -36,7 +40,6 @@ def login_required(f):
         return f(*args, **kwargs)
     wrapper.__name__ = f.__name__
     return wrapper
-
 
 @app.route('/selbstreflexion')
 @login_required
