@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Selbstreflexion</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>🌱 🧘 Mein Tagebuch</h1>
+    <p>Beantworte die folgenden Fragen in deinem eigenen Tempo.</p>
+  </header>
+
+  <main>
+    <div id="question-area">
+      <!-- Frage wird hier angezeigt -->
+    </div>
+    <button id="next-btn" onclick="showNextQuestion()">Nächste Frage</button>
+  </main>
+
+  <script>
+    const fragen = [
+      "Wie fühlst du dich heute?",
+      "Was hat dir heute Energie gegeben?",
+      "Gab es eine Situation, die dich gestresst hat?",
+      "Wie bist du mit dieser Situation umgegangen?",
+      "Was würdest du beim nächsten Mal anders machen?"
+    ];
+
+    let aktuelleFrage = 0;
+
+    function showNextQuestion() {
+      const frageArea = document.getElementById("question-area");
+      if (aktuelleFrage < fragen.length) {
+        frageArea.innerHTML = `<p>${fragen[aktuelleFrage]}</p><textarea rows="4" cols="50" placeholder="Deine Antwort..."></textarea>`;
+        aktuelleFrage++;
+      } else {
+        frageArea.innerHTML = "<p>🎉 Du hast alle Fragen beantwortet. Nimm dir Zeit, deine Antworten zu reflektieren.</p>";
+        document.getElementById("next-btn").style.display = "none";
+      }
+    }
+
+    // Frage beim Laden anzeigen
+    window.onload = showNextQuestion;
+  </script>
+</body>
+</html>

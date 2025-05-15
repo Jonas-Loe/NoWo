@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selbstreflexion: Freunde</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+
+    main {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .freund-block {
+      margin-bottom: 30px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+    }
+
+    input, label {
+      display: block;
+      margin: 6px 0;
+      width: 100%;
+    }
+
+    input[type="file"] {
+      padding: 6px;
+    }
+
+    .image-preview {
+      max-width: 100px;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px 16px;
+      border: none;
+      background: #0077cc;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .add-button {
+      background: #00aa55;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+      button {
+        padding: 12px;
+        font-size: 14px;
+      }
+
+      .freund-block {
+        padding-bottom: 15px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h2>Deine Freunde</h2>
+
+    <div id="freunde-container">
+      <!-- Freund-Blöcke werden hier eingefügt -->
+    </div>
+
+    <button class="add-button" onclick="addFreund()">+ Freund hinzufügen</button>
+    <button onclick="speichern()">Speichern</button>
+  </main>
+
+  <script>
+    let freundCount = 0;
+
+    function addFreund(name = "", geburt = "", bild = "") {
+      freundCount++;
+      const container = document.getElementById("freunde-container");
+
+      const block = document.createElement("div");
+      block.className = "freund-block";
+
+      block.innerHTML = `
+        <h3>Freund/in ${freundCount}</h3>
+        <label for="freund-name-${freundCount}">Name:</label>
+        <input type="text" id="freund-name-${freundCount}" value="${name}" placeholder="Name deines Freundes/ deiner Freundin" required />
+
+        <label for="freund-geburt-${freundCount}">Geburtsdatum:</label>
+        <input type="date" id="freund-geburt-${freundCount}" value="${geburt}" required />
+
+        <label for="freund-bild-${freundCount}">Bild hochladen:</label>
+        <input type="file" id="freund-bild-${freundCount}" accept="image/*" onchange="previewImage(event, ${freundCount})" />
+        
+        <img id="freund-bild-preview-${freundCount}" class="image-preview" src="${bild}" alt="Bildvorschau" style="display: ${bild ? 'block' : 'none'};" />
+      `;
+
+      container.appendChild(block);
+    }
+
+    function previewImage(event, count) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById(`freund-bild-preview-${count}`).style.display = 'block';
+          document.getElementById(`freund-bild-preview-${count}`).src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function speichern() {
+      const email = localStorage.getItem("currentUser");
+      if (!email) {
+        alert("Kein eingeloggter Nutzer gefunden.");
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem("users") || "{}");
+      if (!users[email]) {
+        users[email] = { password: "", data: {} };
+      }
+
+      const daten = {
+        freunde: []
+      };
+
+      for (let i = 1; i <= freundCount; i++) {
+        const nameField = document.getElementById(`freund-name-${i}`);
+        const geburtField = document.getElementById(`freund-geburt-${i}`);
+        const bildField = document.getElementById(`freund-bild-${i}`);
+        const bildSrc = bildField.files[0] ? URL.createObjectURL(bildField.files[0]) : "";
+
+        if (nameField && geburtField) {
+          daten.freunde.push({
+            name: nameField.value,
+            geburt: geburtField.value,
+            bild: bildSrc
+          });
+        }
+      }
+
+      users[email].data = users[email].data || {};
+      users[email].data.selbstreflexion = users[email].data.selbstreflexion || {};
+      users[email].data.selbstreflexion.freunde = daten;
+
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("Freundesdaten gespeichert!");
+    }
+
+    window.onload = function () {
+      const email = localStorage.getItem("currentUser");
+      if (!email) return;
+
+      const users = JSON.parse(localStorage.getItem("users") || "{}");
+      const daten = users[email]?.data?.selbstreflexion?.freunde;
+      if (!daten || !Array.isArray(daten.freunde) || daten.freunde.length === 0) {
+        addFreund();
+        return;
+      }
+
+      daten.freunde.forEach(f => {
+        addFreund(f.name, f.geburt, f.bild);
+      });
+    };
+  </script>
+</body>
+</html>

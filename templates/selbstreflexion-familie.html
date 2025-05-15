@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selbstreflexion: Familie</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+
+    main {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 24px;
+      color: #0077cc;
+    }
+
+    .person-block {
+      margin-bottom: 30px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+    }
+
+    input, label {
+      display: block;
+      margin: 6px 0;
+      width: 100%;
+      font-size: 16px;
+    }
+
+    input[type="file"] {
+      padding: 6px;
+    }
+
+    button {
+      padding: 10px 16px;
+      border: none;
+      background: #0077cc;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .add-button {
+      background: #00aa55;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+      button {
+        padding: 12px;
+        font-size: 14px;
+      }
+
+      .person-block {
+        padding-bottom: 15px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h2>Deine Familie</h2>
+
+    <div class="person-block">
+      <h3>Mutter</h3>
+      <label>Name:</label>
+      <input type="text" id="mutter-name" placeholder="Name der Mutter" />
+      <label>Geburtsdatum:</label>
+      <input type="date" id="mutter-geburt" />
+    </div>
+
+    <div class="person-block">
+      <h3>Vater</h3>
+      <label>Name:</label>
+      <input type="text" id="vater-name" placeholder="Name des Vaters" />
+      <label>Geburtsdatum:</label>
+      <input type="date" id="vater-geburt" />
+    </div>
+
+    <h3>Geschwister</h3>
+    <div id="geschwister-container"></div>
+
+    <button class="add-button" onclick="addGeschwister()">+ Geschwister hinzufügen</button>
+    <button onclick="speichern()">Speichern</button>
+  </main>
+
+  <script>
+    let geschwisterCount = 0;
+
+    function addGeschwister(name = "", geburt = "") {
+      geschwisterCount++;
+      const container = document.getElementById("geschwister-container");
+
+      const block = document.createElement("div");
+      block.className = "person-block";
+
+      block.innerHTML = ` 
+        <h4>Geschwister ${geschwisterCount}</h4>
+        <label for="geschwister-name-${geschwisterCount}">Name:</label>
+        <input type="text" id="geschwister-name-${geschwisterCount}" value="${name}" placeholder="Name des Geschwisters" />
+
+        <label for="geschwister-geburt-${geschwisterCount}">Geburtsdatum:</label>
+        <input type="date" id="geschwister-geburt-${geschwisterCount}" value="${geburt}" />
+      `;
+
+      container.appendChild(block);
+    }
+
+    function speichern() {
+      const email = localStorage.getItem("currentUser");
+      if (!email) {
+        alert("Kein eingeloggter Nutzer gefunden.");
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem("users") || "{}");
+      if (!users[email]) {
+        users[email] = { password: "", data: {} };
+      }
+
+      const daten = {
+        mutter: {
+          name: document.getElementById("mutter-name").value,
+          geburt: document.getElementById("mutter-geburt").value
+        },
+        vater: {
+          name: document.getElementById("vater-name").value,
+          geburt: document.getElementById("vater-geburt").value
+        },
+        geschwister: []
+      };
+
+      for (let i = 1; i <= geschwisterCount; i++) {
+        const nameField = document.getElementById(`geschwister-name-${i}`);
+        const geburtField = document.getElementById(`geschwister-geburt-${i}`);
+        if (nameField && geburtField) {
+          daten.geschwister.push({
+            name: nameField.value,
+            geburt: geburtField.value
+          });
+        }
+      }
+
+      users[email].data = users[email].data || {};
+      users[email].data.selbstreflexion = users[email].data.selbstreflexion || {};
+      users[email].data.selbstreflexion.familie = daten;
+
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("Familiendaten gespeichert!");
+    }
+
+    window.onload = function () {
+      const email = localStorage.getItem("currentUser");
+      if (!email) return;
+
+      const users = JSON.parse(localStorage.getItem("users") || "{}");
+      const daten = users[email]?.data?.selbstreflexion?.familie;
+      if (!daten) {
+        addGeschwister();
+        return;
+      }
+
+      document.getElementById("mutter-name").value = daten.mutter?.name || "";
+      document.getElementById("mutter-geburt").value = daten.mutter?.geburt || "";
+
+      document.getElementById("vater-name").value = daten.vater?.name || "";
+      document.getElementById("vater-geburt").value = daten.vater?.geburt || "";
+
+      if (Array.isArray(daten.geschwister) && daten.geschwister.length > 0) {
+        daten.geschwister.forEach(g => {
+          addGeschwister(g.name, g.geburt);
+        });
+      } else {
+        addGeschwister();
+      }
+    };
+  </script>
+</body>
+</html>

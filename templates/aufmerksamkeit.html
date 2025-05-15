@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reaktionsspiel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f1f1f1;
+            padding-top: 50px;
+            margin: 0;
+        }
+
+        h1 {
+            color: #444;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        #box {
+            width: 200px;
+            height: 200px;
+            margin: 40px auto;
+            background-color: #ccc;
+            border-radius: 10px;
+            cursor: pointer;
+            display: none;
+            transition: background-color 0.3s ease;
+        }
+
+        #message {
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        #start-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            background-color: #0077cc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        #start-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #start-btn:hover:enabled {
+            background-color: #005fa3;
+        }
+
+        .warning {
+            color: red;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.6em;
+            }
+
+            #box {
+                width: 150px;
+                height: 150px;
+            }
+
+            #start-btn {
+                font-size: 14px;
+            }
+
+            #message, .warning {
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.4em;
+            }
+
+            #box {
+                width: 120px;
+                height: 120px;
+            }
+
+            #start-btn {
+                font-size: 12px;
+                padding: 8px 16px;
+            }
+
+            #message, .warning {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Reaktionsspiel</h1>
+    <p>Trainiere deine Aufmerksamkeit: Klicke so schnell wie möglich, wenn die Box grün wird!</p>
+
+    <div id="box"></div>
+    <div id="message">Klicke auf "Start", um zu beginnen.</div>
+    <button id="start-btn">Start</button>
+    <div id="warning" class="warning"></div>
+
+    <script>
+        const box = document.getElementById('box');
+        const message = document.getElementById('message');
+        const startBtn = document.getElementById('start-btn');
+        const warning = document.getElementById('warning');
+
+        let startTime, timeout;
+
+        function startGame() {
+            box.style.backgroundColor = '#ccc';
+            box.style.display = 'none';
+            message.textContent = 'Warte auf die Farbe...';
+            warning.textContent = ''; // Entferne vorherige Warnung
+            startBtn.disabled = true;
+
+            const randomDelay = Math.floor(Math.random() * 4000) + 1000;
+
+            timeout = setTimeout(() => {
+                box.style.display = 'block';
+                box.style.backgroundColor = 'green';
+                startTime = new Date().getTime();
+            }, randomDelay);
+        }
+
+        box.addEventListener('click', () => {
+            if (!startTime) {
+                warning.textContent = "Du musst warten, bis die Box grün wird!";
+                return; // Falls zu früh geklickt
+            }
+
+            const reactionTime = new Date().getTime() - startTime;
+            message.textContent = `Deine Reaktionszeit: ${reactionTime} ms`;
+            box.style.display = 'none';
+            startBtn.disabled = false;
+            startTime = null;
+        });
+
+        startBtn.addEventListener('click', () => {
+            clearTimeout(timeout);
+            startTime = null;
+            startGame();
+        });
+    </script>
+</body>
+</html>

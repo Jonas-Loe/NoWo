@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buchstabensalat</title>
+    <style>
+        /* Allgemeine Styles */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #fffdf5;
+            padding-top: 50px;
+            margin: 0;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        #scrambled {
+            font-size: 3em;
+            margin: 20px 0;
+            color: #444;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 1.2em;
+            width: 80%;
+            max-width: 300px;
+            margin-top: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 6px;
+            background-color: #0077cc;
+            color: white;
+            border: none;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #005fa3;
+        }
+
+        #feedback {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+
+        #counter, #timer {
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.6em;
+            }
+
+            #scrambled {
+                font-size: 2.5em;
+            }
+
+            input[type="text"] {
+                font-size: 1em;
+                width: 90%;
+            }
+
+            button {
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.4em;
+            }
+
+            #scrambled {
+                font-size: 2em;
+            }
+
+            input[type="text"] {
+                font-size: 0.9em;
+                width: 90%;
+            }
+
+            button {
+                padding: 6px 12px;
+                font-size: 0.8em;
+            }
+
+            #counter, #timer {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Buchstabensalat</h1>
+    <p>Setze die Buchstaben in die richtige Reihenfolge.</p>
+
+    <div id="scrambled"></div>
+    <input type="text" id="guess" placeholder="Dein Lösungsvorschlag">
+    <br>
+    <button onclick="checkGuess()">Überprüfen</button>
+    <button onclick="nextWord()">Nächstes Wort</button>
+
+    <div id="feedback"></div>
+    <div id="counter">Richtige Antworten: 0</div>
+    <div id="timer">Zeit: 30s</div>
+
+    <script>
+        const words = ['apfel', 'banane', 'fenster', 'sonne', 'wolke', 'blume', 'stuhl', 'garten'];
+        let currentWord = '';
+        let scrambled = '';
+        let correctCount = 0;
+        let timeLeft = 30;
+        let timerInterval;
+
+        function shuffleWord(word) {
+            return word.split('').sort(() => Math.random() - 0.5).join('');
+        }
+
+        function nextWord() {
+            currentWord = words[Math.floor(Math.random() * words.length)];
+            scrambled = shuffleWord(currentWord);
+            while (scrambled === currentWord) {
+                scrambled = shuffleWord(currentWord); // Sicherstellen, dass es wirklich durcheinander ist
+            }
+            document.getElementById('scrambled').textContent = scrambled;
+            document.getElementById('guess').value = '';
+            document.getElementById('feedback').textContent = '';
+            startTimer();
+        }
+
+        function startTimer() {
+            timeLeft = 30;
+            document.getElementById('timer').textContent = `Zeit: ${timeLeft}s`;
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = `Zeit: ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('feedback').textContent = '❌ Zeit abgelaufen! Versuch es nochmal!';
+                }
+            }, 1000);
+        }
+
+        function checkGuess() {
+            const guess = document.getElementById('guess').value.toLowerCase();
+            if (guess === currentWord) {
+                correctCount++;
+                document.getElementById('counter').textContent = `Richtige Antworten: ${correctCount}`;
+                document.getElementById('feedback').textContent = '✅ Richtig!';
+                setTimeout(nextWord, 1000);  // Wechselt zum nächsten Wort nach 1 Sekunde
+            } else {
+                document.getElementById('feedback').textContent = '❌ Falsch. Versuch es nochmal!';
+            }
+        }
+
+        // Starte das erste Wort
+        nextWord();
+    </script>
+</body>
+</html>

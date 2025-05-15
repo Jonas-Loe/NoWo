@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selbstreflexion</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .box {
+      background: white;
+      padding: 24px;
+      text-align: left;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+      text-decoration: none;
+      color: black;
+      font-size: 18px;
+    }
+
+    .box:hover {
+      transform: translateX(4px);
+      background: #eef6ff;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .list {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      .box {
+        width: 48%; /* Zwei Boxen nebeneinander */
+        font-size: 16px; /* Kleinere Schrift auf Handys */
+        padding: 16px; /* Etwas weniger Padding */
+      }
+    }
+
+    @media (max-width: 480px) {
+      .box {
+        width: 100%; /* Boxen untereinander bei sehr kleinen Bildschirmen */
+        font-size: 14px; /* Noch kleinere Schrift */
+        padding: 12px; /* Weniger Padding */
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Sozialunterstützung</h1>
+
+  <div class="list">
+    <a href="https://web.arbeitsagentur.de/portal/metasuche/suche/information?volltext=Arbeitslosengeld" class="box">Arbeiteslosengeld beantragen</a>
+    <a href="https://www.wg-gesucht.de/" class="box">Wohnungssuche</a>
+  </div>
+</body>
+</html>

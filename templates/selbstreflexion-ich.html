@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ich – Selbstreflexion</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    main {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      font-size: 24px;
+      color: #2e8b57;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-size: 16px;
+      margin-top: 10px;
+      display: block;
+    }
+
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-top: 5px;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .checkbox-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .checkbox-container label {
+      font-size: 14px;
+    }
+
+    /* Responsive Design */
+    @media screen and (max-width: 768px) {
+      h2 {
+        font-size: 20px;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+
+      .checkbox-container label {
+        font-size: 12px;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      h2 {
+        font-size: 18px;
+      }
+
+      textarea,
+      input[type="text"] {
+        padding: 8px;
+      }
+
+      button {
+        padding: 10px 15px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h2>Selbstreflexion: Ich</h2>
+
+    <form id="ichForm">
+      <!-- Frage 1 -->
+      <label for="frage1">Welche Hobbies hast du? Was macht dir Spaß?</label><br />
+      <textarea id="frage1" rows="3" placeholder="z.B. Sport, Musik, usw."></textarea><br /><br />
+
+      <!-- Frage 2 -->
+      <label>Mit welchen Charaktereigenschaften würdest du dich beschreiben? Wähle mindestens zwei aus oder schreibe sie in das freie Feld.</label><br /><br />
+      <div class="checkbox-container">
+        <label><input type="checkbox" name="eigenschaften" value="hilfsbereit"> hilfsbereit</label>
+        <label><input type="checkbox" name="eigenschaften" value="ehrgeizig"> ehrgeizig</label>
+        <label><input type="checkbox" name="eigenschaften" value="kreativ"> kreativ</label>
+        <label><input type="checkbox" name="eigenschaften" value="empathisch"> empathisch</label>
+        <label><input type="checkbox" name="eigenschaften" value="diszipliniert"> diszipliniert</label>
+        <label><input type="checkbox" name="eigenschaften" value="introvertiert"> introvertiert</label>
+        <label><input type="checkbox" name="eigenschaften" value="offen"> offen</label>
+      </div>
+      <br />
+      <label for="eigenschaft-andere">Andere:</label><br />
+      <input type="text" id="eigenschaft-andere" name="eigenschaft-andere" placeholder="z.B. humorvoll, abenteuerlustig" />
+      <br /><br />
+
+      <!-- Frage 3 -->
+      <label for="frage3">Was ist dir im Leben besonders wichtig?</label><br />
+      <textarea id="frage3" rows="4"></textarea><br /><br />
+      
+      <!-- Frage 4 -->
+      <label for="ziele">Was sind deine Ziele?</label><br />
+      <textarea id="ziele" rows="4"></textarea><br /><br />
+
+      <button type="submit">Antworten speichern</button>
+    </form>
+  </main>
+
+  <script>
+    document.getElementById("ichForm").addEventListener("submit", function (e) {
+      e.preventDefault(); // Formular-Reload verhindern
+
+      const frage1 = document.getElementById("frage1").value.trim();
+      const frage3 = document.getElementById("frage3").value.trim();
+      const eigenschaftAndere = document.getElementById("eigenschaft-andere").value.trim();
+      const ziele = document.getElementById("ziele").value.trim();
+
+      const ausgewaehlt = Array.from(document.querySelectorAll('input[name="eigenschaften"]:checked'))
+                            .map(el => el.value);
+
+      if (eigenschaftAndere !== "") {
+        ausgewaehlt.push(eigenschaftAndere);
+      }
+
+      const email = localStorage.getItem("currentUser");
+      if (!email) {
+        alert("Kein eingeloggter Nutzer gefunden.");
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem("users") || "{}");
+      if (!users[email]) {
+        users[email] = { password: "", data: {} };
+      }
+
+      users[email].data = users[email].data || {};
+      users[email].data.selbstreflexion = users[email].data.selbstreflexion || {};
+      users[email].data.selbstreflexion.ich = {
+        frage1,
+        eigenschaften: ausgewaehlt,
+        frage3,
+        ziele
+      };
+
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("Daten gespeichert!");
+    });
+
+    window.onload = function () {
+      const email = localStorage.getItem("currentUser");
+      if (!email) return;
+
+      const users = JSON.parse(localStorage.getItem("users") || "{}");
+      const daten = users[email]?.data?.selbstreflexion?.ich;
+      if (!daten) return;
+
+      document.getElementById("frage1").value = daten.frage1 || "";
+      document.getElementById("frage3").value = daten.frage3 || "";
+      document.getElementById("ziele").value = daten.ziele || "";
+
+      // Bekannte Eigenschaften anhaken
+      const bekannte = ["hilfsbereit", "ehrgeizig", "kreativ", "empathisch", "diszipliniert", "introvertiert", "offen"];
+      const extras = [];
+
+      if (Array.isArray(daten.eigenschaften)) {
+        daten.eigenschaften.forEach(e => {
+          if (bekannte.includes(e)) {
+            const checkbox = document.querySelector('input[name="eigenschaften"][value="' + e + '"]');
+            if (checkbox) checkbox.checked = true;
+          } else {
+            extras.push(e);
+          }
+        });
+      }
+
+      if (extras.length > 0) {
+        document.getElementById("eigenschaft-andere").value = extras.join(", ");
+      }
+    };
+  </script>
+</body>
+</html>
+

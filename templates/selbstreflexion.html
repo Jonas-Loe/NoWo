@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selbstreflexion</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    h2 {
+      color: #2e8b57;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      margin: 20px 0;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    /* Responsive Design */
+    @media screen and (max-width: 768px) {
+      h2 {
+        font-size: 22px;
+      }
+
+      p {
+        font-size: 16px;
+      }
+
+      button {
+        padding: 12px 24px;
+        font-size: 14px;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      h2 {
+        font-size: 20px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h2>Warum ist Selbstreflexion wichtig?</h2>
+    <p>Diese Grafik zeigt, welche positiven Effekte regelmäßige Selbstreflexion haben kann:</p>
+
+    <img src="{{ url_for('static', filename='images/selbstreflexion_grafik.png') }}"
+         alt="Warum ist Selbstreflexion wichtig?"
+         style="max-width: 100%; margin: 20px auto; display: block;" />
+
+    <div style="text-align: center; margin-top: 40px;">
+      <a href="{{ url_for('selbstreflexion_unterkategorien') }}">
+        <button>
+          Selbstreflexion starten
+        </button>
+      </a>
+    </div>
+  </main>
+</body>
+</html>

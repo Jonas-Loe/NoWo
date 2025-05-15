@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selbstreflexion: Lebensabschnitte</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+
+    main {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    .abschnitt {
+      background: #eef2f7;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+
+    .abschnitt h3 {
+      margin-top: 0;
+    }
+
+    textarea {
+      width: 100%;
+      height: 80px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      resize: vertical;
+      font-size: 14px;
+    }
+
+    button {
+      background-color: #0077cc;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 5px;
+      width: auto;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .loeschen {
+      background-color: #cc0000;
+      margin-left: 5px;
+    }
+
+    .speichern {
+      background-color: #28a745;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .alert {
+      margin-top: 10px;
+      color: #28a745;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h2>Lebensabschnitte</h2>
+    <p>
+      Beschreibe Schlüsselerlebnisse in deinen Lebensphasen, die dich geprägt haben.
+    </p>
+
+    <div class="abschnitt" id="kindheit">
+      <h3>Kindheit</h3>
+      <div class="felder"></div>
+      <button onclick="addErlebnis('kindheit')">+ Erlebnis hinzufügen</button>
+    </div>
+
+    <div class="abschnitt" id="jugend">
+      <h3>Jugend</h3>
+      <div class="felder"></div>
+      <button onclick="addErlebnis('jugend')">+ Erlebnis hinzufügen</button>
+    </div>
+
+    <div class="abschnitt" id="erwachsenenalter">
+      <h3>Erwachsenenalter</h3>
+      <div class="felder"></div>
+      <button onclick="addErlebnis('erwachsenenalter')">+ Erlebnis hinzufügen</button>
+    </div>
+
+    <div class="abschnitt" id="aktuell">
+      <h3>Aktuelle Lebensphase</h3>
+      <div class="felder"></div>
+      <button onclick="addErlebnis('aktuell')">+ Erlebnis hinzufügen</button>
+    </div>
+
+    <button class="speichern" onclick="speichern()">Speichern</button>
+    <div id="alert" class="alert"></div>
+  </main>
+
+  <script>
+    function addErlebnis(abschnittId, text = "") {
+      const container = document.querySelector(`#${abschnittId} .felder`);
+      const wrapper = document.createElement("div");
+
+      const textarea = document.createElement("textarea");
+      textarea.placeholder = "Schlüsselerlebnis hier eintragen...";
+      textarea.value = text;
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "Löschen";
+      deleteBtn.className = "loeschen";
+      deleteBtn.onclick = () => wrapper.remove();
+
+      wrapper.appendChild(textarea);
+      wrapper.appendChild(deleteBtn);
+      container.appendChild(wrapper);
+    }
+
+    function speichern() {
+      const email = localStorage.getItem("currentUser");
+      if (!email) {
+        alert("Kein eingeloggter Nutzer.");
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem("users") || "{}");
+      if (!users[email]) users[email] = { password: "", data: {} };
+
+      const abschnitte = ["kindheit", "jugend", "erwachsenenalter", "aktuell"];
+      const daten = {};
+
+      abschnitte.forEach(abschnittId => {
+        const felder = document.querySelectorAll(`#${abschnittId} .felder textarea`);
+        daten[abschnittId] = Array.from(felder).map(f => f.value).filter(text => text.trim() !== "");
+      });
+
+      users[email].data = users[email].data || {};
+      users[email].data.selbstreflexion = users[email].data.selbstreflexion || {};
+      users[email].data.selbstreflexion.lebensabschnitte = daten;
+
+      localStorage.setItem("users", JSON.stringify(users));
+
+      // Bestätigungsnachricht
+      document.getElementById("alert").textContent = "Lebensabschnitt-Daten erfolgreich gespeichert!";
+      setTimeout(() => document.getElementById("alert").textContent = "", 3000); // Nachricht verschwindet nach 3 Sekunden
+    }
+
+    window.onload = () => {
+      const email = localStorage.getItem("currentUser");
+      const users = JSON.parse(localStorage.getItem("users") || "{}");
+      const gespeicherteDaten = users[email]?.data?.selbstreflexion?.lebensabschnitte;
+
+      const abschnitte = ["kindheit", "jugend", "erwachsenenalter", "aktuell"];
+
+      abschnitte.forEach(abschnittId => {
+        const daten = gespeicherteDaten?.[abschnittId] || [""]; // Leeres Textfeld als Platzhalter
+        daten.forEach(text => addErlebnis(abschnittId, text));
+      });
+    };
+  </script>
+</body>
+</html>

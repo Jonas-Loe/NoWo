@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meine Therapie-App</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 30px 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    header img {
+      max-width: 120px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin: 10px 0 5px;
+    }
+
+    p {
+      font-size: 1.2em;
+      color: #555;
+    }
+
+    .module-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .module-box {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      text-decoration: none;
+      color: #333;
+      font-size: 1.2em;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .module-box:hover {
+      background: #eef6ff;
+      transform: translateX(4px);
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.6em;
+      }
+
+      p {
+        font-size: 1em;
+      }
+
+      .module-box {
+        font-size: 1em;
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="{{ url_for('static', filename='images/Logo.jpg') }}" alt="Logo" />
+    <h1>Willkommen zu NoWo</h1>
+    <p>Wähle dein Modul aus:</p>
+  </header>
+
+  <main class="module-container">
+    <a href="{{ url_for('selbstreflexion') }}" class="module-box">❤️🪞 Selbstreflexion</a>
+    <a href="{{ url_for('tagebuch') }}" class="module-box">🌱🧘 Mein Tagebuch</a>
+    <a href="{{ url_for('tipps') }}" class="module-box">🧠🍀 Tipps für Psychos</a>
+    <a href="{{ url_for('psychotherapie_assistent') }}" class="module-box">👩‍⚕️ Psychotherapie-Assistent</a>
+    <a href="{{ url_for('ergotherapie') }}" class="module-box">🎲 Ergotherapie-Assistent</a>
+    <a href="{{ url_for('sozialarbeiter') }}" class="module-box">🤝 Sozialarbeiter-Assistent</a>
+  </main>
+</body>
+</html>
+
+

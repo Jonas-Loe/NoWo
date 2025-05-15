@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Willkommen, {{ username }}</h1>
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </header>
+
+  <main>
+    <div class="module">🌿 Modul 1: Selbstreflexion</div>
+    <div class="module">📖 Modul 2: Tagebuch</div>
+    <div class="module">🧠 Modul 3: Tipps</div>
+  </main>
+</body>
+</html>

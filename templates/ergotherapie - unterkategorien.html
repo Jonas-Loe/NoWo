@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ergotherapie</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .box {
+      background: white;
+      padding: 24px;
+      text-align: left;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+      text-decoration: none;
+      color: black;
+      font-size: 18px;
+      box-sizing: border-box;
+    }
+
+    .box:hover {
+      transform: translateX(4px);
+      background: #eef6ff;
+    }
+
+    @media (max-width: 768px) {
+      .list {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .box {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Ergotherapie</h1>
+  <p style="text-align: center; font-size: 18px;">Nutze die folgenden Übungen, um deine kognitiven Fähigkeiten zu fördern und zu trainieren.</p>
+
+  <div class="list">
+    <a href="{{ url_for('gedaechtnis_spiel') }}" class="box" role="button" aria-label="Gedächtnisübungen">Gedächtnis</a>
+    <a href="{{ url_for('aufmerksamkeit_spiel') }}"  class="box" role="button" aria-label="Übungen zur Aufmerksamkeit und Konzentration">Aufmerksamkeit und Konzentration</a>
+    <a href="{{ url_for('logik_spiel') }}"  class="box" role="button" aria-label="Übungen für logisches Denken">Logisches Denken</a>
+    <a href="{{ url_for('sprache_spiel') }}" class="box" role="button" aria-label="Übungen für sprachliche Fähigkeiten">Sprachliche Fähigkeiten</a>
+  </div>
+</body>
+</html>

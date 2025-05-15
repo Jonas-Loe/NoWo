@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tipps für Psychos</title>
+  <style>
+    /* Grundlegendes Styling */
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .box {
+      background: white;
+      padding: 24px;
+      text-align: left;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+      text-decoration: none;
+      color: black;
+      font-size: 18px;
+    }
+
+    .box:hover {
+      transform: translateX(4px);
+      background: #eef6ff;
+    }
+
+    /* Responsive Design für Tablets und Handys */
+    @media screen and (max-width: 768px) {
+      body {
+        padding: 20px;
+      }
+
+      .list {
+        gap: 15px;
+      }
+
+      .box {
+        font-size: 16px;
+        padding: 18px;
+      }
+    }
+
+    /* Für sehr kleine Geräte (Smartphones) */
+    @media screen and (max-width: 480px) {
+      h1 {
+        font-size: 22px;
+        margin-bottom: 20px;
+      }
+
+      .box {
+        font-size: 14px;
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Tipps für Psychos</h1>
+
+  <div class="list">
+    <a href="{{ url_for('achtsamkeit') }}" class="box">Achtsamkeit</a>
+    <a href="{{ url_for('stressbewältigung') }}" class="box">Stressbewältigung</a>
+    <a href="{{ url_for('meditation') }}" class="box">Meditation</a>
+    <a href="{{ url_for('gesunder_schlaf') }}" class="box">Gesunder Schlaf</a>
+  </div>
+</body>
+</html>
